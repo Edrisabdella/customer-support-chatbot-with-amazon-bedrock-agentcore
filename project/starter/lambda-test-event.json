@@ -1,0 +1,5 @@
+﻿{
+  "description": "Test bug: checkout button fails",
+  "stepsToReproduce": "1. Add item. 2. Open checkout. 3. Click Pay.",
+  "environment": "Chrome 120 on Windows 11"
+}

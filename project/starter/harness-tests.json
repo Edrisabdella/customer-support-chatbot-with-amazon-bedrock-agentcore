@@ -1,0 +1,44 @@
+{
+  "tests": [
+    {
+      "id": "t1_bug_report_partial",
+      "prompt": "Your checkout page crashes every time I click the Pay button.",
+      "expected": "Asks for ONE missing detail - the browser or device. Does not file a ticket."
+    },
+    {
+      "id": "t2_bug_report_complete",
+      "prompt": "The checkout page crashes every time I click the Pay button. Steps: 1. Add an item to the cart. 2. Go to checkout. 3. Click Pay. Environment: Chrome 120 on Windows 11.",
+      "expected": "Files the bug report using the create_bug_report tool and confirms the returned ticket ID."
+    },
+    {
+      "id": "t3_bug_report_multiturn",
+      "prompt": "The product images don't load on category pages.",
+      "expected": "Begins collecting the missing bug-report details and does not file a ticket until description, reproduction steps, and environment are all available."
+    },
+    {
+      "id": "t4_shipping_question",
+      "prompt": "How long does shipping take?",
+      "expected": "Answers using the Online Shop FAQ only."
+    },
+    {
+      "id": "t5_returns_question",
+      "prompt": "What is your return policy?",
+      "expected": "Answers using the Online Shop FAQ only."
+    },
+    {
+      "id": "t6_payment_question",
+      "prompt": "What payment methods do you accept?",
+      "expected": "Answers using the Online Shop FAQ only."
+    },
+    {
+      "id": "t7_orders_question",
+      "prompt": "How can I track my order?",
+      "expected": "Answers using the Online Shop FAQ only."
+    },
+    {
+      "id": "t8_other_request",
+      "prompt": "I want to speak to a human representative.",
+      "expected": "Politely hands the customer off to human support."
+    }
+  ]
+}

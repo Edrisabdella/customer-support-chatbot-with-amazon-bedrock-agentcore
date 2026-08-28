@@ -1,6 +1,4 @@
-# customer-support-chatbot-with-amazon-bedrock-agentcore
-
-My Udacity First project on Customer-Support-Chatbot-with-Amazon-Bedrock-AgentCore
+# Customer Support Chatbot with Amazon Bedrock AgentCore
 
 ## 📌 Project Overview
 
@@ -21,7 +19,7 @@ Amazon Bedrock **Agents Classic** was closed to new customers on July 30, 2026. 
 ## 🛠️ Technology Stack
 
 | Service | Purpose |
-| --------- | --------- |
+|---------|---------|
 | **Amazon Bedrock AgentCore (managed harness)** | Runs the chatbot: agent loop, session memory, and tool execution. |
 | **Amazon Bedrock AgentCore Gateway** | Exposes the Lambda function as a callable tool (`create_bug_report`). |
 | **AWS Lambda** | Implements the bug‑report tool (writes tickets to DynamoDB). |
@@ -34,7 +32,7 @@ Amazon Bedrock **Agents Classic** was closed to new customers on July 30, 2026. 
 ## 📁 Project Files
 
 | File | Description |
-| ------ | ------------- |
+|------|-------------|
 | `cloudformation-tool.yaml` | Deploys DynamoDB table, Lambda, and IAM roles. |
 | `cloudformation-testing.yaml` | Deploys S3 bucket and IAM role for evaluations. |
 | `setup_gateway.py` | Creates the AgentCore Gateway and registers the Lambda tool. |
@@ -63,7 +61,6 @@ Amazon Bedrock **Agents Classic** was closed to new customers on July 30, 2026. 
 
 1. Clone the repository and navigate to the `project/starter/` directory.
 2. (Optional) Create and activate a Python virtual environment:
-
    ```bash
    python3 -m venv venv
    source venv/bin/activate
@@ -77,7 +74,7 @@ aws sts get-caller-identity
 aws configure set region us-east-1
 ```
 
-🧱 Step 1: Deploy the Tool Stack and Gateway
+## Step 1: Deploy the Tool Stack and Gateway
 The bug‑report tool consists of a Lambda function and a DynamoDB table. The Lambda is exposed as a tool through an AgentCore Gateway.
 
 1.1 Deploy the CloudFormation Stack
@@ -266,10 +263,9 @@ aws s3 rm s3://<BUCKET_NAME> --recursive --region us-east-1
 ```
 Delete the CloudFormation stacks:
 
-```bash
+bash
 aws cloudformation delete-stack --stack-name bug-report-tool-stack --region us-east-1
 aws cloudformation delete-stack --stack-name bug-report-testing-stack --region us-east-1
-```
 📂 Submission Checklist
 Your resubmission must contain the following files:
 
@@ -294,13 +290,13 @@ eval-per-prompt-table.png – per‑record evaluation scores.
 (Optional) architecture-diagram.png – system diagram.
 
 ❓ Troubleshooting
-Error Solution
-InvalidClientTokenId Re‑export all three credential values; verify with aws sts get-caller-identity.
-NoCredentialsError Ensure your AWS credentials are set and have Bedrock/AgentCore permissions.
-create_harness fails with IAM error Role propagation delay – wait 1 minute and retry.
-Evaluation job matches no records Ensure modelIdentifier in the JSONL matches inferenceSourceIdentifier in the job config.
-403 Forbidden on gateway MCP URL The harness role needs bedrock-agentcore:InvokeGateway on the gateway ARN – check the IAM policies.
-Results change between runs Memory is enabled – follow Step 8 in the runbook to disable memory and rebuild the harness.
+Error	Solution
+InvalidClientTokenId	Re‑export all three credential values; verify with aws sts get-caller-identity.
+NoCredentialsError	Ensure your AWS credentials are set and have Bedrock/AgentCore permissions.
+create_harness fails with IAM error	Role propagation delay – wait 1 minute and retry.
+Evaluation job matches no records	Ensure modelIdentifier in the JSONL matches inferenceSourceIdentifier in the job config.
+403 Forbidden on gateway MCP URL	The harness role needs bedrock-agentcore:InvokeGateway on the gateway ARN – check the IAM policies.
+Results change between runs	Memory is enabled – follow Step 8 in the runbook to disable memory and rebuild the harness.
 📄 License
 This project is for educational purposes as part of the Udacity Agentic AI Engineer course. See the course materials for license details.
 

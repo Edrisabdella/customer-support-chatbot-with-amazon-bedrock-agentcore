@@ -1,0 +1,18 @@
+﻿{
+  "messageVersion": "1.0",
+  "function": "create_bug_report",
+  "parameters": [
+    {
+      "name": "description",
+      "value": "Test bug: checkout button fails"
+    },
+    {
+      "name": "stepsToReproduce",
+      "value": "1. Add item. 2. Open checkout. 3. Click Pay."
+    },
+    {
+      "name": "environment",
+      "value": "Chrome 120 on Windows 11"
+    }
+  ]
+}
