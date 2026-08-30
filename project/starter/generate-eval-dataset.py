@@ -1,4 +1,11 @@
-#!/usr/bin/env python3
+[default]
+region = us-east-1
+output = json
+
+[profile localstack]
+region = us-east-1
+output = json
+endpoint_url = http://127.0.0.1:4566#!/usr/bin/env python3
 
 """Run your harness against a test suite and emit a Bedrock Evaluations
 JSONL dataset (LLM-as-a-judge, bring-your-own-inference).
@@ -16,15 +23,71 @@ Evaluations expects:
 
 import argparse
 import json
-import sys
-import uuid
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Iterable, List, Optional
 
-import boto3
-from botocore.config import Config
-from botocore.eventstream import EventStream
+def build_eval_jsonl(
+    tests_file: str,
+    output_file: str,
+    harness_arn: str,
+    gateway_arn: str,
+    model_identifier: str,
+    region: str = "us-east-1",
+    config: Optional[Dict[str, Any]] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Build a Bedrock Evaluations JSONL dataset from a test suite.
+    Each record contains a prompt, the harness metadata, and the expected
+    result for downstream evaluation.
+    """
+    path = Path(tests_file)
+    with path.open("r", encoding="utf-8") as fh:
+        payload = json.load(fh)
 
+    tests = payload.get("tests", [])
+    rows: List[Dict[str, Any]] = []
+
+    for item in tests:
+        prompt = item.get("prompt", "").strip()
+        if not prompt:
+            continue
+
+        record = {
+            "input": {
+                "prompt": prompt,
+                "context": {
+                    "harnessArn": harness_arn,
+                    "gatewayArn": gateway_arn,
+                    "region": region,
+                    "modelIdentifier": model_identifier,
+                },
+            },
+            "expectedOutput": {
+                "summary": item.get("expected", ""),
+                "testId": item.get("id", ""),
+            },
+            "metadata": {
+                "testId": item.get("id", ""),
+                "kind": "support-chatbot",
+                "config": config or {},
+            },
+            "modelResponses": [
+                {
+                    "modelIdentifier": model_identifier,
+                    "content": prompt,
+                }
+            ],
+        }
+        rows.append(record)
+
+    out_path = Path(output_file)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with out_path.open("w", encoding="utf-8") as fh:
+        for row in rows:
+            fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+    return rows
 
 def _event_stream(response):
     """Locate the streaming part of the invoke_harness response."""
@@ -32,7 +95,6 @@ def _event_stream(response):
         if isinstance(value, EventStream):
             return value
     raise RuntimeError(f"No event stream in response: {list(response)}")
-
 
 def invoke_harness_once(
     rt,
@@ -85,12 +147,11 @@ def invoke_harness_once(
 
     return {"final_output_text": texts[-1] if texts else ""}
 
-
 def main():
     p = argparse.ArgumentParser(
         description="Run harness tests and emit Bedrock Evaluations JSONL "
                     "(LLM-as-judge BYOI).")
-    p.add_argument("--tests-json", required=True,
+    p.add_argument("--tests-json", default="flow-tests.json",
                    help="Path to the test suite JSON "
                         "(see harness-tests-template.json).")
     p.add_argument("--config", default="agentcore_config.json",
@@ -138,7 +199,7 @@ def main():
     with out_path.open("w", encoding="utf-8") as f:
         for t in tests:
             test_id = t["id"]
-            reference = t.get("expected", "")
+            reference = t.get("expected", t.get("referenceResponse", ""))
             prompt = t.get("prompt", "")
             try:
                 result = invoke_harness_once(

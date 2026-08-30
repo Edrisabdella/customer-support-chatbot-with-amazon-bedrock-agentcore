@@ -305,3 +305,25 @@ Results change between runs Memory is enabled – follow Step 8 in the runbook t
 This project is for educational purposes as part of the Udacity Agentic AI Engineer course. See the course materials for license details.
 
 Built with ❤️ and Amazon Bedrock AgentCore.
+
+
+## Reviewer Feedback Remediation (Resubmission)
+
+The reviewer requested explicit evidence for the FAQ and hand-off routes and a reproducible evaluation suite. This submission now includes:
+
+- `project/starter/flow-tests.json` — automated tests covering BUG REPORT, covered PLATFORM QUESTION, uncovered PLATFORM QUESTION, and ANYTHING ELSE / HAND-OFF.
+- `project/starter/generate-eval-dataset.py` — invokes the AgentCore harness and produces Bedrock Evaluations JSONL.
+- `project/starter/output_eval_dataset.jsonl` — JSONL evaluation dataset retained from the project.
+- `project/starter/RESUBMISSION_EVIDENCE.md` — exact reviewer evidence checklist, commands, and observation requirements.
+- `project/starter/eval_config.json` — valid JSON evaluation configuration.
+
+### Final evidence that must be captured from AWS
+
+Before resubmission, capture actual Amazon Bedrock console screenshots showing:
+1. the `Platform_FAQ_Prompt` node/template with embedded FAQ content;
+2. a covered FAQ test response;
+3. an uncovered FAQ test response containing the support phone number;
+4. an ANYTHING ELSE / HAND-OFF response containing the support phone number; and
+5. the completed Bedrock Evaluation job results page with `Builtin.Correctness` close to 1.0.
+
+Do not fabricate screenshots or scores. Run the flow and evaluation in the AWS account, then replace/add the evidence images in `evidence/` and update `evaluation_results.md` with the exact final job values.
