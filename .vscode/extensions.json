@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "teamsdevapp.vscode-ai-foundry"
+        "teamsdevapp.vscode-ai-foundry",
+        "amazonwebservices.aws-toolkit-vscode"
     ]
 }
